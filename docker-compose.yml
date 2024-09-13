@@ -1,0 +1,50 @@
+services:
+  web:
+    depends_on:
+      - api
+    build: ./frontend
+    env_file:
+      - .env
+    ports:
+      - ${FRONTEND_PORT:-3000}:5173
+    develop:
+      watch:
+        - path: ./frontend/package.json
+          action: rebuild
+        - path: ./frontend/package.lock.json
+          action: rebuild
+        - path: ./frontend
+          target: ./app/frontend
+          action: sync
+
+  api:
+    depends_on:
+      - db
+    build: ./backend
+    env_file:
+      - .env
+    ports:
+      - ${BACKEND_PORT:-3001}:3001
+    develop:
+      watch:
+        - path: ./backend/package.json
+          action: rebuild
+        - path: ./backend/package-lock.json
+          action: rebuild
+        - path: ./backend
+          target: ./app/backend
+          action: sync
+
+  db:
+    image: postgres
+    restart: always
+    env_file:
+      - .env
+      - ./backend/.env
+    ports:
+      - ${POSTGRES_PORT:-3003}:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
