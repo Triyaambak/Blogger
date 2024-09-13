@@ -26,6 +26,11 @@ const getAuth = (req: Request, res: Response) => {
   res.status(StatusCodes.OK).json(authUserDetails);
 }
 
+const removeAuth = (req: Request, res: Response) => {
+  res.clearCookie("authToken");
+  res.status(StatusCodes.OK).json({ status: "Successful", message: "Cookie removed" });
+};
+
 const signin = async (req: Request, res: Response) => {
     const authInput: AuthInputType = req.body;
     validateAuthSigninInput(authInput);
@@ -87,4 +92,4 @@ const signup = async (req: Request, res: Response) => {
     }
 }
 
-export { signin, signup, getAuth };
+export { signin, signup, getAuth, removeAuth };
