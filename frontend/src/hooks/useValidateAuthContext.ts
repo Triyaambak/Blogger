@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { updateAuth } from "../redux/features/authSlice";
@@ -9,6 +9,7 @@ const BACKEND_URL: string = `${import.meta.env.VITE_BACKEND_URL}${import.meta.en
   }`;
 
 const useValidateAuthContext = () => {
+  const [completed, setCompleted] = useState<boolean>(true);
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
@@ -17,7 +18,6 @@ const useValidateAuthContext = () => {
         const { data } = await axios.get(`${BACKEND_URL}/api/auth/getAuth`, {
           withCredentials: true,
         });
-
         if (
           data &&
           typeof data === "object" &&
@@ -29,9 +29,11 @@ const useValidateAuthContext = () => {
           data.email.length > 0
         ) {
           dispatch(updateAuth({ id: data.id, name: data.name, email: data.email }));
+          setCompleted(false);
           navigate("/blogs");
         } else {
           dispatch(updateAuth({ id: "", name: "", email: "" }));
+          setCompleted(false);
           navigate("/");
         }
       } catch (e) {
@@ -41,8 +43,8 @@ const useValidateAuthContext = () => {
     };
 
     validateAuth();
-  }, []); 
-
+  }, [navigate, dispatch]);
+  return completed;
 };
 
 export default useValidateAuthContext;
