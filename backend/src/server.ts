@@ -4,6 +4,7 @@ import "express-async-errors";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import generalRateLimiter from "./rate-limiter/generalRateLimiter";
 
 const app = express();
 app.use(cors({
@@ -12,6 +13,7 @@ app.use(cors({
   credentials: true  
 }));
 app.use(cookieParser());
+app.use(generalRateLimiter);
 
 import authMiddleware from "./middlewares/authMiddleware";
 import notFoundMiddleware from "./middlewares/notFoundMiddleware";
