@@ -46,5 +46,13 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  rdb:
+    image: redis:alpine
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - ${REDIS_PORT:-3006}:6379
+
 volumes:
   postgres_data:

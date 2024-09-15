@@ -5,6 +5,13 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import generalRateLimiter from "./rate-limiter/generalRateLimiter";
+import redisClient from "./redis/redisClient";
+
+async () => {
+  await redisClient.set("triyu", 1);
+  const val = await redisClient.get("triyu");
+  console.log(val);
+}
 
 const app = express();
 app.use(cors({
