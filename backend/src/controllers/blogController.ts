@@ -68,6 +68,7 @@ const getBlog = async (req: Request, res: Response) => {
 const addBlog = async (req: Request, res: Response) => {
   const { user } = req.body;
   const { blogData } = req.body;
+  
   const blogInput : BlogInputType = {
     authorId: user.id,
     title: blogData.title,
@@ -75,10 +76,20 @@ const addBlog = async (req: Request, res: Response) => {
   };
   validateBlogInputDataType(blogInput);
   try {
-    await prisma.blog.create({
+    const blog = await prisma.blog.create({
       data: blogInput,
+      select: {
+        id: true,      
+        title: true,   
+        content: true, 
+        author: {
+          select: {
+            name: true, 
+          },
+        },
+      },
     });
-    res.status(StatusCodes.CREATED).json({ status: "Successful", message: "Blog created" });
+    res.status(StatusCodes.CREATED).json({ status: "Successful", message: "Blog created", blog });
   } catch (error) {
     throw new InternalServer("Error while creating blog");
   }
