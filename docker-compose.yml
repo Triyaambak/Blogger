@@ -20,6 +20,7 @@ services:
   api:
     depends_on:
       - db
+      - rdb
     build: ./backend
     env_file:
       - .env
@@ -36,11 +37,12 @@ services:
           action: sync
 
   db:
+    depends_on:
+      - rdb
     image: postgres
     restart: always
     env_file:
       - .env
-      - ./backend/.env
     ports:
       - ${POSTGRES_PORT:-3003}:5432
     volumes:
