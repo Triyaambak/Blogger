@@ -1,27 +1,22 @@
 import { useEffect, useState } from "react"
 import axios from "axios";
-
-type BlogsType = {
-  id: string;
-  content: string;
-  title: string;
-  author: { name: string };
-}
-
-type AllBlogsType = BlogsType[]; 
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../redux/Store";
+import { updateBlogsContext , AllBlogsType } from "../redux/features/blogsSlice";
 
 const BACKEND_URL = `${import.meta.env.VITE_BACKEND_URL}${import.meta.env.VITE_BACKEND_PORT}`;
 
 const useGetAllBlogs = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [allBlogs, setAllBlogs] = useState<AllBlogsType>([]);
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     const getAllBlogs = async () => {
       setLoading(true);
       try {
-        const { data : { data } } = await axios.get(`${BACKEND_URL}/api/blogs/bulk`, { withCredentials: true });
-        setAllBlogs(data);
+        const response = await axios.get(`${BACKEND_URL}/api/blogs/bulk`, { withCredentials: true });
+        const data: AllBlogsType = response.data.data;
+        dispatch(updateBlogsContext(data));
       } catch (error) {
         console.log(error);
       }
@@ -30,10 +25,7 @@ const useGetAllBlogs = () => {
     getAllBlogs();
   }, []);
 
-  return {
-    loading,
-    allBlogs,
-  }
+  return loading;
 };
 
 export default useGetAllBlogs;
