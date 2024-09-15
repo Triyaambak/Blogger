@@ -46,7 +46,7 @@ const LabelledInput = ({
 };
 
 const Auth = ({ type }: { type: "signin" | "signup" }) => {
-	useValidateAuthContext();
+	if (type === "signin") useValidateAuthContext();
 	const credentialsInput: CredentialsStateType = useSelector(
 		(state: RootState) => state.credentialsContext
 	);

@@ -3,13 +3,14 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import { updateAuth } from "../redux/features/authSlice";
 import { AppDispatch } from "../redux/Store";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const BACKEND_URL: string = `${import.meta.env.VITE_BACKEND_URL}${import.meta.env.VITE_BACKEND_PORT
   }`;
 
 const useValidateAuthContext = () => {
   const [completed, setCompleted] = useState<boolean>(true);
+  const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
@@ -30,7 +31,8 @@ const useValidateAuthContext = () => {
         ) {
           dispatch(updateAuth({ id: data.id, name: data.name, email: data.email }));
           setCompleted(false);
-          navigate("/blogs");
+          if(location.pathname === "/")
+            navigate("/blogs");
         } else {
           dispatch(updateAuth({ id: "", name: "", email: "" }));
           setCompleted(false);

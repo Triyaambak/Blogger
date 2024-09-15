@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import Blogs from "./pages/Blogs";
+import Publish from "./pages/Publish";
 import { Provider } from "react-redux";
 import { store } from "./redux/Store";
 
@@ -21,6 +22,10 @@ function App() {
 					<Route
 						path="/blogs"
 						element={<Blogs />}
+					></Route>
+					<Route
+						path="/publish"
+						element={<Publish />}
 					></Route>
 				</Routes>
 			</BrowserRouter>
