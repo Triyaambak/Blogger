@@ -5,6 +5,7 @@ import Blogs from "./pages/Blogs";
 import Publish from "./pages/Publish";
 import { Provider } from "react-redux";
 import { store } from "./redux/Store";
+import { Blog } from "./pages/Blog";
 
 function App() {
 	return (
@@ -26,7 +27,12 @@ function App() {
 					<Route
 						path="/publish"
 						element={<Publish />}
-					></Route>
+          ></Route>
+          <Route
+            path="/blog/:id"
+            element={<Blog />}
+          >
+          </Route>
 				</Routes>
 			</BrowserRouter>
 		</Provider>

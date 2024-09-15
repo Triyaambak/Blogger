@@ -1,11 +1,21 @@
 import { AppBar } from "../components/AppBar";
+import useAddBlog from "../hooks/useAddBlog";
 import useValidateAuthContext from "../hooks/useValidateAuthContext";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Publish = () => {
+	const navigate = useNavigate();
 	const [title, setTitle] = useState<string>("");
 	const [content, setContent] = useState<string>("");
+	const { loading, addBlog } = useAddBlog();
 	const completed = useValidateAuthContext();
+
+	const handleAddBlog = async () => {
+		await addBlog({ title, content });
+		if (!loading) navigate("/blogs");
+	};
+
 	return (
 		<div>
 			{!completed && <AppBar />}
@@ -42,6 +52,8 @@ const Publish = () => {
 					</div>
 					<div className="w-full">
 						<button
+							onClick={handleAddBlog}
+							disabled={loading}
 							type="submit"
 							className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
 						>
