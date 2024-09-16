@@ -3,6 +3,8 @@ import { StatusCodes } from "http-status-codes";
 import prisma from "../prisma/prismaClient";
 import { validateBlogInputDataType } from "../utils/blogUtils";
 import InternalServer from "../errors/InternalServer";
+import redisClient from "../redis/redisClient";
+import { redisGetBlog , redisPutBlog} from "../utils/redisUtil";
 
 type BlogInputType = {
   authorId: string,
@@ -43,9 +45,18 @@ const getAllBlogs = async (req: Request, res: Response) => {
 
 const getBlog = async (req: Request, res: Response) => {
   const id = req.params.id;
+
+  const response : string | null = await redisGetBlog(id);
+
+  if (response) {
+    const data: BlogType = JSON.parse(response);
+    return res.status(StatusCodes.OK).json({ status: "Successful", message: "Blog retrieved", data });
+  }
+    
+
   try {
     const response: BlogType | null = await prisma.blog.findUnique({
-       where: {
+      where: {
         id,
       },
       select: {
@@ -59,9 +70,11 @@ const getBlog = async (req: Request, res: Response) => {
         },
       },
     });
-    res.status(StatusCodes.OK).json({ status: "Successful", message: "All blogs retrieved" ,data:response});
+
+    await redisPutBlog(id, JSON.stringify(response));
+    res.status(StatusCodes.OK).json({ status: "Successful", message: "Blog retrieved", data: response });
   } catch (error) {
-    throw new InternalServer("Error while getting user blogs");
+    throw new InternalServer(`Error while getting user Blog with id ${id}`);
   }
 };
 
