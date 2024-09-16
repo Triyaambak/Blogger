@@ -39,7 +39,7 @@ Blogger is a sophisticated and user-friendly blogging platform designed for both
 ## Setting up docker-compose.yml env variables
 
 ```bash
-touch .env
+> touch .env
 ```
 
 ### Your .env file should contain the following 
@@ -54,7 +54,7 @@ REDIS_PORT=xxxx
 ## Setting up backend
 
 ```bash
-touch ./backend/.env
+> touch ./backend/.env
 ```
 
 ### Your ./backend/.env file should contain the following 
@@ -73,7 +73,7 @@ REDIS_PORT=xxxx
 ## Setting up frontend
 
 ```bash
-touch ./frontend/.env
+> touch ./frontend/.env
 ```
 
 ### Your ./frontend/.env file should contain the following 
@@ -85,6 +85,6 @@ VITE_BACKEND_URL=*************
 ## Now after everything is set
 
 ```bash
-docker compose up --watch
+> docker compose up --watch
 ```
 
