@@ -1,4 +1,5 @@
 import InternalServer from "../errors/InternalServer";
+import TooManyRequest from "../errors/TooManyRequest";
 import redisClient from "../redis/redisClient";
 
 type AuthTokenDetails = {
@@ -54,4 +55,14 @@ const redisPutAuthToken = async (authToken: string, id: string, name: string, em
   }
 };
 
-export { redisGetBlog, redisRemoveAuthToken, redisPutBlog, redisPutAuthToken, redisGetAuthToken };
+const redisRateLimiter = async (userIp: string) => {
+  const key = `rate_limit_${userIp}`;
+  const currReqRate = await redisClient.INCR(key);
+  if (currReqRate === 1)
+    redisClient.EXPIRE(key, 60);
+
+  if (currReqRate > 5)
+    throw new TooManyRequest("You have given a maximum of 5 tries , Please wait for 60 seconds");
+}
+
+export { redisGetBlog, redisRemoveAuthToken, redisPutBlog, redisPutAuthToken, redisGetAuthToken, redisRateLimiter };

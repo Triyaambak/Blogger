@@ -21,10 +21,11 @@ import notFoundMiddleware from "./middlewares/notFoundMiddleware";
 import errorHandlerMiddleware from "./middlewares/errorHandlerMiddleware";
 import authRoutes from "./routes/authRoutes"
 import blogRoutes from "./routes/blogsRoute";
+import userRateLimiter from "./rate-limiter/userRateLimiter";
 
 app.use(express.json());
 
-app.use("/api/auth", authRoutes);
+app.use("/api/auth", userRateLimiter, authRoutes);
 app.use("/api/blogs", authMiddleware ,blogRoutes);
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
