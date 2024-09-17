@@ -33,7 +33,12 @@ Blogger is a sophisticated and user-friendly blogging platform designed for both
 ## Getting Started
 
 ```bash
-> git clone github-repo-url
+// HTTP
+> git clone https://github.com/Triyaambak/Blogger.git
+
+// SSH
+
+> git clone git@github.com/Triyaambak/Blogger
 ```
 
 ## Setting up docker-compose.yml env variables
